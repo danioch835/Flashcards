@@ -1,3 +1,4 @@
+package flashcard;
 
 public class Result {
 	private int goodAnswers;
@@ -22,6 +23,11 @@ public class Result {
 	
 	public void addBadAnswer() {
 		badAnswers++;
+	}
+	
+	public void reset() {
+		goodAnswers = 0;
+		badAnswers = 0;
 	}
 	
 }

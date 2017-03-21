@@ -1,3 +1,4 @@
+package flashcard;
 
 public class Word {
 
@@ -24,6 +25,20 @@ public class Word {
 	
 	public String getInEnglish() {
 		return this.inEnglish;
+	}
+	
+	public String toString() {
+		return "[PL]" + inPolish + ", [EN]" + inEnglish;
+	}
+	
+	public boolean equals(Object o) {
+		if(o instanceof Word && o != null) {
+			Word word = (Word) o;
+			if(word.getInPolish().equals(inPolish) && word.getInEnglish().equals(inEnglish)) {
+				return true;
+			} 
+		}
+		return false;
 	}
 	
 }

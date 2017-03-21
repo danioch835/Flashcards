@@ -1,3 +1,4 @@
+package flashcard;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,28 +8,50 @@ public class Translator {
 	private Word testedWord;
 	private ArrayList<Word> lastTestedWords;
 	private Result actualResult;
+	private boolean isPolishToEnglish;
 	
 	public Translator(Dictionary dictionary) {
 		this.dictionary = dictionary;
 		lastTestedWords = new ArrayList<Word>();
 		actualResult = new Result();
+		isPolishToEnglish = true;
 	}
 	
-	public String fromPolishToEnglish() {
-		return this.testedWord.getInEnglish();
+	public String translate() {
+		String translatedWord = (isPolishToEnglishMode()) ? testedWord.getInEnglish() : testedWord.getInPolish();
+		return translatedWord;
 	}
 	
-	public String fromEnglishToPolish() {
-		return this.testedWord.getInPolish();
-		
+	public boolean isPolishToEnglishMode() {
+		return isPolishToEnglish;
 	}
 	
-	public String loadRandomPolishWord() {
+	public void setPolishToEnglishMode() {
+		isPolishToEnglish = true;
+	}
+	
+	public void setEnglishToPolishMode() {
+		isPolishToEnglish = false;
+	}
+	
+	public String loadRandomWord() {
+		if(dictionary.getNumberOfWords() > 0) {
+			if(isPolishToEnglishMode()) {
+				return loadRandomPolishWord();
+			} else {
+				return loadRandomEnglishWord();
+			}
+		} else {
+			return "";
+		}
+	}
+	
+	private String loadRandomPolishWord() {
 		this.loadRandomWordFromDictionary();
 		return this.testedWord.getInPolish();
 	}
 	
-	public String loadRandomEnglishWord() {
+	private String loadRandomEnglishWord() {
 		this.loadRandomWordFromDictionary();
 		return this.testedWord.getInEnglish();
 	}
@@ -51,11 +74,23 @@ public class Translator {
 	}
 	
 	private boolean wordIsUsed(Word word) {
-		boolean result = false;
+		/*boolean result = false;
 		for(Word testedWord : lastTestedWords) {
 			if(testedWord.getInPolish().equals(word.getInPolish()) && testedWord.getInEnglish().equals(word.getInEnglish())) {
 				result = true;
 			}
+		}
+		return result;*/
+		return lastTestedWords.contains(word);
+	}
+	
+	public boolean checkTranslation(String translation) {
+		boolean result = false;
+		String expectedTranslation = (isPolishToEnglishMode()) ? testedWord.getInEnglish() : testedWord.getInPolish();
+		if(expectedTranslation.equals(translation)) {
+			goodAnswer();
+		} else {
+			badAnswer();
 		}
 		return result;
 	}
@@ -74,5 +109,9 @@ public class Translator {
 	
 	public int getBadAnswers() {
 		return actualResult.getBadAnswers();
+	}
+	
+	public void resetResults() {
+		actualResult.reset();
 	}
 }
